@@ -15,6 +15,14 @@ configs:
     path: extract/private/holdout.csv
 ---
 
+<!-- dataset-factory:links -->
+**Dataset Factory · v-3ceae5479cda761c**
+
+[Dataset website](https://earino.github.io/factory-wser-effluent-exceedance/versions/v-3ceae5479cda761c/) · [GitHub release](https://github.com/earino/factory-wser-effluent-exceedance/releases/tag/v-3ceae5479cda761c) · [Hugging Face](https://huggingface.co/datasets/earino/factory-wser-effluent-exceedance/tree/v-3ceae5479cda761c) · [Catalogue](https://earino.github.io/dataset-factory-site/)
+
+Artifact: 15ee03d514ebc5eaedefc7fba7611d2525fd4b9c828bdfb120ae55b8b8f4c1b4
+<!-- /dataset-factory:links -->
+
 # Will a Canadian wastewater system exceed its federal effluent quality limit next year? Forward exceedance prediction from WSER identification and monitoring reports
 
 At the start of a compliance year, will a federally regulated Canadian wastewater system report at least one effluent monitoring period whose average CBOD or suspended-solids concentration exceeds the limit that applies to it?
