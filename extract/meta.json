@@ -1,0 +1,56 @@
+{
+  "name": "wser-effluent-exceedance",
+  "description": "At the start of a compliance year, will a federally regulated Canadian wastewater system report at least one effluent monitoring period whose average CBOD or suspended-solids concentration exceeds the limit that applies to it?",
+  "target": "next_year_exceedance",
+  "positive_label": 1,
+  "id_columns": [
+    "record_id"
+  ],
+  "columns": [
+    "record_id",
+    "decision_date",
+    "target_year",
+    "system_id",
+    "prior_year_exceedance",
+    "prior_year_worst_margin",
+    "ever_exceeded_before",
+    "history_years_reported",
+    "periods_reported_prior_year",
+    "reporting_frequency",
+    "system_type",
+    "avg_daily_effluent_volume_m3",
+    "owner_type_operator_type",
+    "province",
+    "treatment_family",
+    "hydraulic_retention_ge_5_days",
+    "chlorine_use",
+    "receiving_water_type",
+    "prior_year_acute_lethality_failures",
+    "next_year_exceedance"
+  ],
+  "rows": {
+    "train": 8244,
+    "eval": 5894,
+    "holdout": 3988
+  },
+  "positive_rate": {
+    "train": 0.19602134885977682,
+    "eval": 0.23159144893111638,
+    "holdout": 0.22392176529588767
+  },
+  "split": {
+    "eval": {
+      "end": "2023-03-01T00:00:00.000",
+      "start": "2020-03-01T00:00:00.000"
+    },
+    "holdout": {
+      "end": null,
+      "start": "2023-03-01T00:00:00.000"
+    },
+    "train": {
+      "end": "2020-03-01T00:00:00.000",
+      "start": "2015-03-01T00:00:00.000"
+    }
+  },
+  "split_description": "Fixed chronological boundaries by target year: train 2015-2019, eval 2020-2022, holdout 2023-2024. No embargo year is needed because each label window is a single non-overlapping calendar year and every feature is dated on or before 31 December Y-1, so no row can see a later row's outcome. Target year 2025 is excluded because its reports are still maturing in the current data vintage. Reporting-completeness strata and province are kept balanced across the three periods by construction of the year windows, not by resampling."
+}

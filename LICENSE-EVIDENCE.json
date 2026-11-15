@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "terms_url": "https://open.canada.ca/en/open-government-licence-canada",
+  "terms_sha256": "e62c3211e4bdc94fa4b6ca6bf541749c18b468c994ccae55e32603fafe7204cd",
+  "documentation_url": "https://data-donnees.ec.gc.ca/data/substances/planinfrastruture/wastewater-systems-effluent-regulations-reported-data/",
+  "documentation_sha256": "5a8dfcc6a192f72eac4ee63e474a92efd0e8fe0cc48ac79f114a915640ef36bd",
+  "quoted_excerpt": "The Information Provider grants you a worldwide, royalty-free, perpetual, non-exclusive licence to use the Information, including for commercial purposes, subject to the terms below.",
+  "excerpt_found": true,
+  "excerpt_match": "contiguous",
+  "scope": "Captured publisher bytes and quote presence; semantic applicability reviewed separately"
+}

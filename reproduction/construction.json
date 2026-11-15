@@ -1,0 +1,363 @@
+{
+  "construction_notes": "Repaired the three semantic-review findings without changing the question, target, feature list, split windows or label rule. (1) Limit-based monitoring flags are now forced missing for years before 2015 before system-year aggregation, while the same raw rows still supply history_years_reported, period counts and prior-year operational attributes. A new check asserts that 2015 targets have no nonmissing prior_year_exceedance, prior_year_worst_margin or ever_exceeded_before even when stray pre-2015 positive-limit rows exist. (2) receiving_water_type now resolves the water-frequented-by-fish description or name column, not the generic discharge-place description; the check records the selected header and requires a nonmissing value. (3) Current-vintage identification System status is no longer merged into historical eligibility filtering because it has no reporting-year stamp; every filing system remains eligible and the status check records that no status-based exclusion occurred. Corrected quality.task.population and timing.row_selection to match this source semantics. The population filing, positive-limit, reported-average, prior-history and unresolved-negative rules are unchanged; the only removal is the unsupported current-vintage status filter. Missing semantic evidence remains: identification attributes are current-vintage and not year-versioned; actual CSV publication dates are unverified; acute result and species vocabularies are only partly verified; the label is any-period-above-limit, not the regulator's 75-percent compliance determination. The cohort is explicitly retrospective and outcome-conditioned.",
+  "quality": {
+    "carry_columns": [
+      "decision_date",
+      "target_year",
+      "system_id"
+    ],
+    "evaluation_contract": {
+      "access": "isolated_rows",
+      "cross_row_audit": {
+        "auxiliary_files_review": "Only public/train.csv, public/eval.csv and private/holdout.csv are written. No fixture labels, answer scaffolds or auxiliary evaluation files are shipped.",
+        "probes": [],
+        "rationale": "Chronological target-year splits; all historical features use only monitoring rows with year earlier than the target year; limit-based history is forced missing before 2015; no current-vintage operational status filter is applied; no label-derived group rates are shipped. Population eligibility is outcome-conditioned by design and disclosed in timing.row_selection; independent-event clusters use system_id rather than the constant decision date."
+      },
+      "feature_evidence": {
+        "avg_daily_effluent_volume_m3": {
+          "availability": "Y-1 monitoring rows; missing when no Y-1 volume",
+          "source": "WSER monitoring CSV",
+          "status": "verified"
+        },
+        "chlorine_use": {
+          "availability": "Current-vintage identification snapshot; not year-versioned",
+          "source": "WSER identification CSV",
+          "status": "assumed"
+        },
+        "decision_date": {
+          "availability": "Constructed as 1 March of target year Y from the statutory 45-day reporting deadline; the downloaded CSV publication date is not observed",
+          "source": "WSER subsection 19(1) reporting deadline",
+          "status": "assumed"
+        },
+        "ever_exceeded_before": {
+          "availability": "All years before Y with evaluable limit rows, restricted to 2015 and later; missing when no prior evaluable year",
+          "source": "WSER monitoring CSV",
+          "status": "verified"
+        },
+        "history_years_reported": {
+          "availability": "All years before Y with at least one monitoring row",
+          "source": "WSER monitoring CSV",
+          "status": "verified"
+        },
+        "hydraulic_retention_ge_5_days": {
+          "availability": "Current-vintage identification snapshot; not year-versioned",
+          "source": "WSER identification CSV",
+          "status": "assumed"
+        },
+        "owner_type_operator_type": {
+          "availability": "Latest Y-1 monitoring row",
+          "source": "WSER monitoring CSV",
+          "status": "verified"
+        },
+        "periods_reported_prior_year": {
+          "availability": "Y-1 monitoring records; zero when no Y-1 record",
+          "source": "WSER monitoring CSV",
+          "status": "verified"
+        },
+        "prior_year_acute_lethality_failures": {
+          "availability": "Acute-lethality CSV rows for Y-1; missing when no acute test row exists",
+          "source": "WSER acute lethality CSV",
+          "status": "assumed"
+        },
+        "prior_year_exceedance": {
+          "availability": "Y-1 rows with a positive limit and a reported average, restricted to 2015 and later; missing when no evaluable prior-year limit row",
+          "source": "WSER monitoring CSV",
+          "status": "verified"
+        },
+        "prior_year_worst_margin": {
+          "availability": "Y-1 evaluable rows, restricted to 2015 and later; missing when no evaluable prior-year limit row",
+          "source": "WSER monitoring CSV",
+          "status": "verified"
+        },
+        "province": {
+          "availability": "Latest Y-1 monitoring row, fallback to identification snapshot",
+          "source": "WSER monitoring and identification CSVs",
+          "status": "verified"
+        },
+        "receiving_water_type": {
+          "availability": "Current-vintage identification snapshot; not year-versioned; parsed from the water-frequented-by-fish description or name, not the generic discharge-place description",
+          "source": "WSER identification CSV, water-frequented-by-fish description or name column",
+          "status": "assumed"
+        },
+        "record_id": {
+          "availability": "Constructed stable identifier from system_id and target_year",
+          "source": "WSER monitoring system identifiers",
+          "status": "verified"
+        },
+        "reporting_frequency": {
+          "availability": "Latest Y-1 monitoring row; inferred from period tokens when blank",
+          "source": "WSER monitoring CSV",
+          "status": "verified"
+        },
+        "system_id": {
+          "availability": "Reported on every monitoring row",
+          "source": "WSER monitoring CSV",
+          "status": "verified"
+        },
+        "system_type": {
+          "availability": "Latest Y-1 monitoring row",
+          "source": "WSER monitoring CSV",
+          "status": "verified"
+        },
+        "target_year": {
+          "availability": "Calendar year parsed from the reporting period",
+          "source": "WSER monitoring CSV",
+          "status": "verified"
+        },
+        "treatment_family": {
+          "availability": "Current-vintage identification snapshot with no reporting-year stamp; treated as quasi-static",
+          "source": "WSER identification CSV",
+          "status": "assumed"
+        }
+      },
+      "limitations": [
+        "Identification attributes are a single current-vintage snapshot with no reporting-year stamp, so treatment, retention time, chlorine use and receiving-water descriptions can reflect post-decision upgrades.",
+        "The label is an any-period-above-limit indicator, not ECCC official 75-percent-of-the-time compliance determination, so it marks more system-years positive than the regulator would.",
+        "Sampling exposure is unequal: a monthly-reporting plant has more chances to exceed than an annual-reporting lagoon. Reporting frequency and period counts are supplied, but exposure is not removed from the label.",
+        "Repeated systems across years induce serial correlation. Chronological splits prevent future-to-past leakage but not dependence.",
+        "Coverage is partial: Nunavut, the Northwest Territories, and areas north of the 54th parallel in Quebec and Newfoundland and Labrador are outside the regulations. Yukon and Quebec municipal systems may have missing acute-lethality or CSO fields.",
+        "Reporting completeness is imperfect; a missing exceedance can mean non-reporting rather than good performance. Eligibility requires at least one filed report.",
+        "Data-entry anomalies exist in the source, including compliance values that can contradict average minus limit. The label therefore uses average and limit directly.",
+        "Target year 2025 is excluded because its reports are still maturing in the 2026 vintage.",
+        "Facility-level coordinates and postal codes are not shipped.",
+        "Actual publication dates of the downloaded current-vintage CSV are not verified. The 1 March decision instant is the statutory reporting deadline, not an observed publication record.",
+        "Acute lethality testing covers only systems above the testing threshold, so the failure count is missing rather than zero for many systems.",
+        "Prior-year exceedance and worst margin are missing, not zero, for 2015 targets and any year without an evaluable positive-limit row; stray pre-2015 positive-limit rows are deliberately ignored for limit-based features.",
+        "Treatment-family classification uses keyword matching on the identification treatment list and may misclassify mixed or unusual treatment trains.",
+        "Operational status from the identification snapshot is current-vintage and lacks a reporting-year stamp, so it is not used to exclude historical target years; it is retained only as a diagnostic limitation.",
+        "Population eligibility requires a target-year monitoring row with a positive limit and a reported average, so the cohort is defined using outcome-window reports; it is a retrospective research cohort, not a deployable 1 March forecast roster.",
+        "Independent-event clustering uses system_id because the statutory decision date is constant within a target year; this is a conservative identity cluster, not a day cluster."
+      ],
+      "selection": {
+        "evidence": "Decision instant is 1 March of target year Y. Year Y-1 monitoring reports are due by 14 February Y under WSER subsection 19(1); CSO reports are due by 15 February. Identification attributes are a current-vintage snapshot treated as quasi-static. Population eligibility and the label use year-Y monitoring reports, so the cohort is retrospective and outcome-conditioned; limit-based historical features are restricted to 2015 and later; current-vintage operational status is not used to exclude historical rows. Event clustering uses stable system_id because the statutory decision date is constant within a target year.",
+        "kind": "prediction_time"
+      },
+      "training_label_timing": "unverified",
+      "use": "retrospective_research",
+      "vintage": {
+        "evidence": "Monitoring file covers 2013-2025 in a current-vintage download; identification attributes have no reporting-year stamp.",
+        "kind": "current_snapshot"
+      }
+    },
+    "event_key_column": "system_id",
+    "expected_duplicate_ids": 0,
+    "features": [
+      "prior_year_exceedance",
+      "prior_year_worst_margin",
+      "ever_exceeded_before",
+      "history_years_reported",
+      "periods_reported_prior_year",
+      "reporting_frequency",
+      "system_type",
+      "avg_daily_effluent_volume_m3",
+      "owner_type_operator_type",
+      "province",
+      "treatment_family",
+      "hydraulic_retention_ge_5_days",
+      "chlorine_use",
+      "receiving_water_type",
+      "prior_year_acute_lethality_failures"
+    ],
+    "features_documented_at": "prediction_time",
+    "high_cardinality_columns": [
+      "avg_daily_effluent_volume_m3",
+      "owner_type_operator_type",
+      "receiving_water_type",
+      "record_id"
+    ],
+    "id_columns": [
+      "record_id"
+    ],
+    "label_source_columns": [
+      "cbod_average",
+      "cbod_limit",
+      "suspended_solids_average",
+      "suspended_solids_limit"
+    ],
+    "measurements": [
+      {
+        "column": "cbod_average",
+        "frame": "monitoring report for one averaging period",
+        "unit": "mg/L"
+      },
+      {
+        "column": "cbod_limit",
+        "frame": "monitoring report, applicable limit for the period",
+        "unit": "mg/L"
+      },
+      {
+        "column": "suspended_solids_average",
+        "frame": "monitoring report for one averaging period",
+        "unit": "mg/L"
+      },
+      {
+        "column": "suspended_solids_limit",
+        "frame": "monitoring report, applicable limit for the period",
+        "unit": "mg/L"
+      }
+    ],
+    "name": "wser-effluent-exceedance",
+    "positive_label": 1,
+    "post_hoc_columns": [
+      "cbod_compliance",
+      "suspended_solids_compliance",
+      "approval_state"
+    ],
+    "split_windows": {
+      "eval": {
+        "end": "2023-03-01T00:00:00.000",
+        "start": "2020-03-01T00:00:00.000"
+      },
+      "holdout": {
+        "end": null,
+        "start": "2023-03-01T00:00:00.000"
+      },
+      "train": {
+        "end": "2020-03-01T00:00:00.000",
+        "start": "2015-03-01T00:00:00.000"
+      }
+    },
+    "splits": {
+      "eval": "public/eval.csv",
+      "holdout": "private/holdout.csv",
+      "train": "public/train.csv"
+    },
+    "target": "next_year_exceedance",
+    "task": {
+      "decision_user": "ECCC regional compliance and enforcement staff who allocate inspection and follow-up effort across roughly 2,300 regulated systems, and municipal utility managers who sequence capital upgrades and operational fixes for the coming year.",
+      "features": [
+        {
+          "availability": "Y-1 rows with a positive limit and a reported average, restricted to 2015 and later; missing when no evaluable prior-year limit row",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-descriptions-EN.txt",
+          "meaning": "1 if any Y-1 monitoring row with a positive applicable limit and a reported average has average strictly above limit; 0 if Y-1 has an evaluable positive-limit row and none exceed; missing if Y-1 has no evaluable positive-limit row. Limit-based history is restricted to 2015 and later, so 2015 targets are missing even if stray pre-2015 rows carry positive limits.",
+          "name": "prior_year_exceedance"
+        },
+        {
+          "availability": "Y-1 evaluable rows, restricted to 2015 and later; missing when no evaluable prior-year limit row",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-descriptions-EN.txt",
+          "meaning": "Maximum over Y-1 CBOD and suspended-solids evaluable rows of average minus limit, floored at 0; missing when no evaluable Y-1 limit row. Limit-based history is restricted to 2015 and later.",
+          "name": "prior_year_worst_margin"
+        },
+        {
+          "availability": "All years before Y with evaluable limit rows, restricted to 2015 and later; missing when no prior evaluable year",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-surveillance-monitoring.csv",
+          "meaning": "1 if any year before Y has an evaluable exceedance; 0 if at least one prior evaluable year and none; missing if no prior evaluable year. Limit-based history is restricted to 2015 and later.",
+          "name": "ever_exceeded_before"
+        },
+        {
+          "availability": "All years before Y with at least one monitoring row",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-surveillance-monitoring.csv",
+          "meaning": "Count of distinct calendar years before Y with at least one monitoring row.",
+          "name": "history_years_reported"
+        },
+        {
+          "availability": "Y-1 monitoring records; zero when no Y-1 record",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-descriptions-EN.txt",
+          "meaning": "Count of distinct year-period-month monitoring records in Y-1, a measure of sampling exposure; 0 if no Y-1 monitoring row.",
+          "name": "periods_reported_prior_year"
+        },
+        {
+          "availability": "Latest Y-1 monitoring row; inferred from period tokens when blank",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-descriptions-EN.txt",
+          "meaning": "Canonical annual, quarterly or monthly reporting frequency from the latest Y-1 monitoring row; inferred from period tokens if the field is blank.",
+          "name": "reporting_frequency"
+        },
+        {
+          "availability": "Latest Y-1 monitoring row",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-surveillance-monitoring.csv",
+          "meaning": "Intermittent or continuous wastewater system type from the latest Y-1 monitoring row.",
+          "name": "system_type"
+        },
+        {
+          "availability": "Y-1 monitoring rows; missing when no Y-1 volume",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-surveillance-monitoring.csv",
+          "meaning": "Mean reported average daily effluent volume in Y-1, in cubic metres per day; missing if no Y-1 value.",
+          "name": "avg_daily_effluent_volume_m3"
+        },
+        {
+          "availability": "Latest Y-1 monitoring row",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-surveillance-monitoring.csv",
+          "meaning": "Owner type and operator type from the latest Y-1 row, joined by a separator; missing if neither is reported.",
+          "name": "owner_type_operator_type"
+        },
+        {
+          "availability": "Latest Y-1 monitoring row, fallback to identification snapshot",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-surveillance-monitoring.csv",
+          "meaning": "Province from the latest Y-1 monitoring row, falling back to the identification snapshot.",
+          "name": "province"
+        },
+        {
+          "availability": "Current-vintage identification snapshot with no reporting-year stamp; treated as quasi-static",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-identification.csv",
+          "meaning": "Mechanical or activated-sludge class, lagoon class, no treatment, or other, parsed from the identification treatment-type list.",
+          "name": "treatment_family"
+        },
+        {
+          "availability": "Current-vintage identification snapshot; not year-versioned",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-identification.csv",
+          "meaning": "1 if reported hydraulic retention time is five days or more, else 0; missing if not reported.",
+          "name": "hydraulic_retention_ge_5_days"
+        },
+        {
+          "availability": "Current-vintage identification snapshot; not year-versioned",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-identification.csv",
+          "meaning": "1 if chlorine or a chlorine compound is reported in use, else 0; missing if not reported.",
+          "name": "chlorine_use"
+        },
+        {
+          "availability": "Current-vintage identification snapshot; not year-versioned; parsed from the water-frequented-by-fish description or name, not the generic discharge-place description",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-identification.csv",
+          "meaning": "Reported description or name of the water frequented by fish at the discharge point, such as a watercourse, lake or fish spawning area, taken from the water-frequented-by-fish identification column; not the generic discharge-place description.",
+          "name": "receiving_water_type"
+        },
+        {
+          "availability": "Acute-lethality CSV rows for Y-1; missing when no acute test row exists",
+          "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-aigue-acute.csv",
+          "meaning": "Count of failed rainbow-trout acute lethality tests in Y-1; missing when no acute test row exists, which is expected for systems below the testing threshold.",
+          "name": "prior_year_acute_lethality_failures"
+        }
+      ],
+      "outcome_horizon": "The full calendar year Y (1 January to 31 December), observable from reports due by 14 February of Y+1.",
+      "population": "Wastewater systems filing at least one monitoring report in target year Y in which a CBOD or suspended-solids limit greater than 0 is recorded, with at least one prior year of monitoring history. The system-year must also have at least one such positive-limit row with a reported average; system-years with a positive limit but a missing average and no observed exceedance are excluded rather than labeled 0. No current-vintage operational-status snapshot is used to exclude historical system-years because the identification status field has no reporting-year stamp and is not year-versioned. Because no limits existed before 1 January 2015, target years run 2015 to 2024. Systems outside the regulations (Nunavut, Northwest Territories, north of the 54th parallel in Quebec and Newfoundland and Labrador) never appear. Quebec municipal systems appear under the equivalency agreement with provincial limit conventions carried in the limit columns. Eligibility and labels use year-Y reports, so this is a retrospective research cohort, not a deployable 1 March forecast roster.",
+      "prediction_time": "1 March of target year Y. Every monitoring report for a completed averaging period is due within 45 days of the period end (annual and Q4 reports therefore due by 14 February), and combined-sewer-overflow reports are due by 15 February, so all year Y-1 effluent results and CSO volumes are on file at the statutory deadline. The timing metadata treats the 45-day statutory lag as a publication proxy; actual publication dates of the downloaded current-vintage CSV are not verified. Identification-report attributes are treated as a current-vintage snapshot.",
+      "question": "At 1 March of year Y, will the system report at least one year-Y monitoring period with average CBOD or suspended solids strictly above the applicable limit?",
+      "simple_references": "Persistence (predict Y from the Y-1 exceedance flag), majority class (no exceedance, roughly four in five system-years), a province-by-treatment-family base rate, and an ever-exceeded-before indicator. These establish how much of the signal is habit versus structure.",
+      "split_policy": "Fixed chronological boundaries by target year: train 2015-2019, eval 2020-2022, holdout 2023-2024. No embargo year is needed because each label window is a single non-overlapping calendar year and every feature is dated on or before 31 December Y-1, so no row can see a later row outcome. Target year 2025 is excluded because its reports are still maturing in the current data vintage.",
+      "target": "For system i and target calendar year Y, label is 1 if any monitoring row for year Y with a reported CBOD limit greater than 0 has average CBOD strictly greater than that limit, or any row with a reported suspended-solids limit greater than 0 has average suspended solids strictly greater than that limit; otherwise 0. Computed from the reported average and the reported limit, not from the pre-computed compliance column. If no exceedance is observed but any positive-limit row has a missing average, the system-year is excluded rather than labeled 0. Rows for 2013 and 2014 are excluded because no limits applied.",
+      "usefulness": "Exceedance cannot be read off any field at the decision instant: it must be forecast from plant design class, retention time, disinfection practice, scale, sampling regime, jurisdiction and multi-year margin history. A regulator with about 2,300 systems and limited inspectors cannot inspect everything; knowing which compliant-looking systems are about to tip over, and which chronic lagoon systems are structurally stuck, changes where follow-up and upgrade money go. Persistence alone under-performs because first-time exceedances and post-upgrade recoveries are exactly the cases that matter operationally, and because transitional-authorization systems are judged against their own relaxed limit rather than 25 mg/L."
+    },
+    "time_column": "decision_date",
+    "timing": {
+      "features": {
+        "period": "annual",
+        "published_days_after_period_end": 45,
+        "source_kind": "administrative_record"
+      },
+      "observations": [],
+      "prediction_instant": {
+        "citation": "WSER subsection 19(1) requires monitoring reports within 45 days after the end of the period; CSO reports by 15 February. The decision instant is 1 March of Y. The 45-day statutory lag is used as a conservative publication proxy; actual CSV publication dates are unverified.",
+        "days_after_period_end": 45,
+        "kind": "publication",
+        "period": "annual"
+      },
+      "row_selection": {
+        "fields": [
+          "reporting_period",
+          "reporting_year",
+          "system_id"
+        ],
+        "latest_period_used": "Y-1",
+        "rule": "Target year Y is the calendar year of the monitoring period. Features use only monitoring rows with year less than Y, so the latest feature period is Y-1. Limit-based history is forced missing before 2015 because no limits applied. Population eligibility and the label use year-Y monitoring rows, which define the outcome window; this is retrospective research with unverified event-time availability, not a deployable forecast selection. No current-vintage operational status is used to exclude historical rows. Target years run 2015 through 2024."
+      }
+    }
+  },
+  "references": {
+    "entity_columns": [
+      "system_id",
+      "province",
+      "treatment_family"
+    ],
+    "persistence_column": "prior_year_exceedance",
+    "persistence_direction": 1
+  }
+}

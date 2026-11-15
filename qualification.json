@@ -1,0 +1,831 @@
+{
+ "ok": true,
+ "dataset": "/output/extract",
+ "gate_version": "1.6.1",
+ "artifact": {
+  "train": {
+   "file": "public/train.csv",
+   "sha256": "483e3ef72c333d60b33ee9b3e90ca2417b3cb419e88c7cc01ad30ae95cbe09c7",
+   "bytes": 1555738
+  },
+  "eval": {
+   "file": "public/eval.csv",
+   "sha256": "357b0a613a3be2dc73246c189159db69b7fd5761468b73e2dbc4dd701b18cd95",
+   "bytes": 1056905
+  },
+  "holdout": {
+   "file": "private/holdout.csv",
+   "sha256": "696a55f28a532d8f0e24ca5912f55d5e13e87095e8fee12ff907c3d3c286060e",
+   "bytes": 713711
+  },
+  "meta.json": {
+   "file": "meta.json",
+   "sha256": "f1c52fe3b6d2891f4dba03417a15b1e097313452f26858af6e1bd90aee97a95a",
+   "bytes": 2006
+  },
+  "quality.json": {
+   "file": "quality.json",
+   "sha256": "579517c28f8f81aac6f8508f4ace96a0d46ff96a009cca6c57134c359c1a29ee",
+   "bytes": 31878
+  },
+  "scanned_files": {
+   "meta.json": "f1c52fe3b6d2891f4dba03417a15b1e097313452f26858af6e1bd90aee97a95a",
+   "private/holdout.csv": "696a55f28a532d8f0e24ca5912f55d5e13e87095e8fee12ff907c3d3c286060e",
+   "public/eval.csv": "357b0a613a3be2dc73246c189159db69b7fd5761468b73e2dbc4dd701b18cd95",
+   "public/train.csv": "483e3ef72c333d60b33ee9b3e90ca2417b3cb419e88c7cc01ad30ae95cbe09c7",
+   "quality.json": "579517c28f8f81aac6f8508f4ace96a0d46ff96a009cca6c57134c359c1a29ee"
+  },
+  "artifact_version": {
+   "digest": "15ee03d514ebc5eaedefc7fba7611d2525fd4b9c828bdfb120ae55b8b8f4c1b4",
+   "components": [
+    "eval",
+    "holdout",
+    "meta.json",
+    "quality.json",
+    "train"
+   ]
+  }
+ },
+ "results": [
+  {
+   "check": "descriptor",
+   "ok": true,
+   "detail": "quality.json loaded for 'wser-effluent-exceedance'",
+   "evidence": {}
+  },
+  {
+   "check": "battery.exact_recovery",
+   "ok": true,
+   "detail": "Any zero-error exact reconstruction of a scored row blocks qualification",
+   "evidence": {
+    "version": "1.0.0",
+    "ok": true,
+    "input_digest": "a0d3861fe52c7b45e1377f4bfc89792e9161a61d68e7cebe3026d8ed730171ba",
+    "code": {
+     "artifact_scrub.py": "8c663253e691a7b8751f9c853b40a3752a833360caafb1ea8e8f534e64af4b68",
+     "leakage_battery.py": "adbf7ee0aca0012b78cc1f1e4aeb968a23717cae30f66a02e080215e75f830e3",
+     "recovery_recipes.py": "f64c542fcda232169c95ace17421b45275194b934938c0ea4c9b68e6f844ad0e"
+    },
+    "freeze_sha256": "d29a0079c3cae1504a23f2b0060e13ba3342ff2eedc6f1b8605c21923fa2629a",
+    "all_results_sha256": "c88cc3c3614b06a05b7f75432c96b798344300042d065cef3e0ba9a33b902bd7",
+    "detail_files": {
+     "results-0000.jsonl": {
+      "sha256": "627d3f8ca124f994f1e539b58b26843699c4f7b4395d95bbae4bd3c3b137c546",
+      "bytes": 245633
+     },
+     "results-0001.jsonl": {
+      "sha256": "c34c9441133e958c6e7a29d14195b681ffb296cf08efe7297c9583a0f34fb8a8",
+      "bytes": 95046
+     }
+    },
+    "exact": [],
+    "failures": [],
+    "flags": [
+     {
+      "name": "all:explore:system_id:365:prior_year_exceedance",
+      "kind": "heuristic",
+      "split": "eval",
+      "sha256": "11768ef8548292dbef8ebc04dcc716e3366f69d6cc4b0caeb30c1ca9195a7588",
+      "rows": 5894,
+      "covered": 5661,
+      "errors": 0,
+      "auc_covered": 1.0,
+      "auc_full": 0.9991886232557462
+     },
+     {
+      "name": "all:explore:system_id:365:prior_year_worst_margin",
+      "kind": "heuristic",
+      "split": "eval",
+      "sha256": "40f22e27a233adfc11756494d18a3cd0d93b439a817eca5530d59d7e82e9ddcc",
+      "rows": 5894,
+      "covered": 5661,
+      "errors": null,
+      "auc_covered": 1.0,
+      "auc_full": 0.9987615828640337
+     },
+     {
+      "name": "all:explore:system_id:366:prior_year_exceedance",
+      "kind": "heuristic",
+      "split": "holdout",
+      "sha256": "50510b379d20ad317cd48ee5e8aafa84c66b86ec3d1fe4abab1449ca29a73587",
+      "rows": 3988,
+      "covered": 1926,
+      "errors": 0,
+      "auc_covered": 1.0,
+      "auc_full": 0.8652479254369382
+     },
+     {
+      "name": "all:explore:system_id:366:prior_year_worst_margin",
+      "kind": "heuristic",
+      "split": "holdout",
+      "sha256": "c8788563ae9c6a792a3800297207b5838c79f8d4fdf20d06a2a5e5bdf2029103",
+      "rows": 3988,
+      "covered": 1926,
+      "errors": null,
+      "auc_covered": 1.0,
+      "auc_full": 0.8617853453625126
+     },
+     {
+      "name": "lookup_unanimous:ever_exceeded_before+prior_year_acute_lethality_failures",
+      "kind": "supervised",
+      "split": "holdout",
+      "sha256": "aaa937aeb685df4b82423f69ec4b32f99b51c1566de9b3f7012441c2c41639ec",
+      "rows": 3988,
+      "covered": 3,
+      "errors": 0,
+      "auc_covered": 1.0,
+      "auc_full": 0.5012810099010976
+     },
+     {
+      "name": "lookup_unanimous:periods_reported_prior_year+treatment_family",
+      "kind": "supervised",
+      "split": "holdout",
+      "sha256": "0818fde06de6892c202f750bdf7e6d2c633444e4541130ba83bd0be431f9691e",
+      "rows": 3988,
+      "covered": 14,
+      "errors": 0,
+      "auc_covered": 1.0,
+      "auc_full": 0.5054399050594555
+     },
+     {
+      "name": "lookup_unanimous:prior_year_acute_lethality_failures+prior_year_exceedance",
+      "kind": "supervised",
+      "split": "holdout",
+      "sha256": "663996858edd659320669d5e4f50581c6ed51ae2f947817c81411a2b18202013",
+      "rows": 3988,
+      "covered": 4,
+      "errors": 0,
+      "auc_covered": 1.0,
+      "auc_full": 0.5018407394073814
+     },
+     {
+      "name": "lookup_unanimous:receiving_water_type+treatment_family",
+      "kind": "supervised",
+      "split": "holdout",
+      "sha256": "8d7e366572c2f0f49220ab19385242e2299663967239926ef467f01a00bab466",
+      "rows": 3988,
+      "covered": 26,
+      "errors": 0,
+      "auc_covered": 1.0,
+      "auc_full": 0.5105451302266597
+     },
+     {
+      "name": "self:explore:system_id:365:prior_year_exceedance",
+      "kind": "heuristic",
+      "split": "eval",
+      "sha256": "a66e3a85b0d765f7db7c44ffef1a4399adfbc87636e14672a8e932f3182e06d7",
+      "rows": 5894,
+      "covered": 3777,
+      "errors": 0,
+      "auc_covered": 1.0,
+      "auc_full": 0.935245794905764
+     },
+     {
+      "name": "self:explore:system_id:365:prior_year_worst_margin",
+      "kind": "heuristic",
+      "split": "eval",
+      "sha256": "c784cf54c5992677fa2a14444987134896a72f5c905643d6f7c53ee5b6c324fd",
+      "rows": 5894,
+      "covered": 3777,
+      "errors": null,
+      "auc_covered": 1.0,
+      "auc_full": 0.9320934603778499
+     },
+     {
+      "name": "self:explore:system_id:366:prior_year_exceedance",
+      "kind": "heuristic",
+      "split": "holdout",
+      "sha256": "50510b379d20ad317cd48ee5e8aafa84c66b86ec3d1fe4abab1449ca29a73587",
+      "rows": 3988,
+      "covered": 1926,
+      "errors": 0,
+      "auc_covered": 1.0,
+      "auc_full": 0.8652479254369382
+     },
+     {
+      "name": "self:explore:system_id:366:prior_year_worst_margin",
+      "kind": "heuristic",
+      "split": "holdout",
+      "sha256": "c8788563ae9c6a792a3800297207b5838c79f8d4fdf20d06a2a5e5bdf2029103",
+      "rows": 3988,
+      "covered": 1926,
+      "errors": null,
+      "auc_covered": 1.0,
+      "auc_full": 0.8617853453625126
+     },
+     {
+      "name": "lookup_unanimous:receiving_water_type+treatment_family",
+      "kind": "supervised",
+      "split": "eval",
+      "sha256": "670fd6cef28b2f771a2a908d034fc29228ac90deaeeb062649b465220cdc373b",
+      "rows": 5894,
+      "covered": 31,
+      "errors": 1,
+      "auc_covered": 0.9705882352941176,
+      "auc_full": 0.5070219836834984
+     },
+     {
+      "name": "lookup_unanimous:periods_reported_prior_year+prior_year_exceedance",
+      "kind": "supervised",
+      "split": "holdout",
+      "sha256": "c1235183120e7924ef74be98bd4ffdc4cc598b4a2f4ffac84e0596980e81294a",
+      "rows": 3988,
+      "covered": 24,
+      "errors": 1,
+      "auc_covered": 0.9583333333333334,
+      "auc_full": 0.5075138349431134
+     }
+    ],
+    "flag_count": 14,
+    "attempted": {
+     "heuristic": 104,
+     "statistical": 848,
+     "supervised": 760
+    },
+    "constant_or_uncovered": {
+     "heuristic": 84,
+     "statistical": 41,
+     "supervised": 307
+    },
+    "scope": {
+     "donors": [
+      "self",
+      "all"
+     ],
+     "exploratory_keys": 8,
+     "exploratory_operands": 8,
+     "max_columns": 128,
+     "scored_labels_read": false,
+     "tokens_per_column": 80,
+     "train_labels": "supervised controls only"
+    }
+   }
+  },
+  {
+   "check": "battery.recorded_in_quality",
+   "ok": true,
+   "detail": "Construction must record the computed battery receipt in quality.json; use --record-battery",
+   "evidence": {}
+  },
+  {
+   "check": "artifacts.no_shipped_answers",
+   "ok": true,
+   "detail": "Every generated artifact file is scanned for shipped answer scaffolds",
+   "evidence": {
+    "version": "1.0.1",
+    "ok": true,
+    "files": {
+     "meta.json": "f1c52fe3b6d2891f4dba03417a15b1e097313452f26858af6e1bd90aee97a95a",
+     "private/holdout.csv": "696a55f28a532d8f0e24ca5912f55d5e13e87095e8fee12ff907c3d3c286060e",
+     "public/eval.csv": "357b0a613a3be2dc73246c189159db69b7fd5761468b73e2dbc4dd701b18cd95",
+     "public/train.csv": "483e3ef72c333d60b33ee9b3e90ca2417b3cb419e88c7cc01ad30ae95cbe09c7",
+     "quality.json": "579517c28f8f81aac6f8508f4ace96a0d46ff96a009cca6c57134c359c1a29ee"
+    },
+    "tree_digest": "082558620df7cef541b1ae523a411197d138067123d8f145e90daa54b7701eda",
+    "findings": [],
+    "finding_count": 0,
+    "truncated": false,
+    "scope": {
+     "identifier_count": 9882,
+     "scored_windows": [
+      [
+       "2020-03-01",
+       "2023-03-01"
+      ]
+     ],
+     "split_files_excluded": 3,
+     "executes_code": false
+    }
+   }
+  },
+  {
+   "check": "contract.declared",
+   "ok": true,
+   "detail": "evaluation_contract required: intended use, access, vintage and evidence",
+   "evidence": {}
+  },
+  {
+   "check": "contract.scope",
+   "ok": true,
+   "detail": "use='retrospective_research'; access='isolated_rows'; eval is development, holdout is final",
+   "evidence": {}
+  },
+  {
+   "check": "contract.vintage_and_selection",
+   "ok": true,
+   "detail": "Vintage, selection and limitations must be explicit; declarations are not measurements",
+   "evidence": {}
+  },
+  {
+   "check": "contract.label_availability",
+   "ok": true,
+   "detail": "No full-row availability ledger: training-label timing UNVERIFIED; retrospective use only",
+   "evidence": {}
+  },
+  {
+   "check": "contract.every_input_has_availability_evidence",
+   "ok": true,
+   "detail": "Every solver-visible non-target column needs availability evidence; missing: []",
+   "evidence": {}
+  },
+  {
+   "check": "contract.cross_row_review",
+   "ok": true,
+   "detail": "Document applicable cross-row probes and every solver-visible auxiliary file",
+   "evidence": {}
+  },
+  {
+   "check": "leakage.declared_columns",
+   "ok": true,
+   "detail": "every shipped column is declared",
+   "evidence": {
+    "undeclared": []
+   }
+  },
+  {
+   "check": "leakage.answer_source_absent",
+   "ok": true,
+   "detail": "no answer source or post-hoc column is shipped",
+   "evidence": {
+    "shipped_forbidden": []
+   }
+  },
+  {
+   "check": "leakage.every_column_could_be_scored",
+   "ok": true,
+   "detail": "every column was scored for leakage",
+   "evidence": {
+    "unscorable": []
+   }
+  },
+  {
+   "check": "leakage.no_single_column_determines_the_target",
+   "ok": true,
+   "detail": "no shipped column separates the classes on its own",
+   "evidence": {
+    "offenders": [],
+    "high_cardinality": [
+     "avg_daily_effluent_volume_m3@eval",
+     "avg_daily_effluent_volume_m3@holdout",
+     "avg_daily_effluent_volume_m3@train",
+     "record_id@eval",
+     "record_id@holdout",
+     "record_id@train"
+    ],
+    "missing_splits": []
+   }
+  },
+  {
+   "check": "leakage.high_cardinality_declared",
+   "ok": true,
+   "detail": "high-cardinality columns are declared as identifiers or free fields",
+   "evidence": {
+    "undeclared": [],
+    "declared": [
+     "avg_daily_effluent_volume_m3",
+     "owner_type_operator_type",
+     "receiving_water_type",
+     "record_id"
+    ]
+   }
+  },
+  {
+   "check": "timing.prediction_time_declared",
+   "ok": true,
+   "detail": "prediction instant is declared",
+   "evidence": {}
+  },
+  {
+   "check": "timing.no_post_hoc_feature",
+   "ok": true,
+   "detail": "no feature is documented as post-hoc",
+   "evidence": {
+    "overlap": []
+   }
+  },
+  {
+   "check": "timing.label_source_is_not_a_feature",
+   "ok": true,
+   "detail": "the label source is not a feature",
+   "evidence": {
+    "source_features": []
+   }
+  },
+  {
+   "check": "timing.every_feature_documented",
+   "ok": true,
+   "detail": "features documented as available 'prediction_time'",
+   "evidence": {
+    "features_documented_at": "prediction_time"
+   }
+  },
+  {
+   "check": "timing.instant_declared",
+   "ok": true,
+   "detail": "prediction instant kind='publication' citation=True",
+   "evidence": {
+    "prediction_instant": {
+     "citation": "WSER subsection 19(1) requires monitoring reports within 45 days after the end of the period; CSO reports by 15 February. The decision instant is 1 March of Y. The 45-day statutory lag is used as a conservative publication proxy; actual CSV publication dates are unverified.",
+     "days_after_period_end": 45,
+     "kind": "publication",
+     "period": "annual"
+    }
+   }
+  },
+  {
+   "check": "timing.publication_lag_measured",
+   "ok": true,
+   "detail": "0 of 0 observed period_end -> published dates are usable",
+   "evidence": {
+    "observations": [],
+    "measured_lag_days": null,
+    "source_kind": "administrative_record"
+   }
+  },
+  {
+   "check": "timing.features_available_at_instant",
+   "ok": true,
+   "detail": "features publish 45d after the period, instant is 45d after it",
+   "evidence": {
+    "features_lag_days": 45,
+    "instant_lag_days": 45,
+    "measured_lag_days": null
+   }
+  },
+  {
+   "check": "timing.instant_accounts_for_publication_lag",
+   "ok": true,
+   "detail": "instant is a publication instant",
+   "evidence": {
+    "kind": "publication",
+    "features_lag_days": 45
+   }
+  },
+  {
+   "check": "timing.selection_uses_only_available_data",
+   "ok": true,
+   "detail": "row selection declares its latest period as 'Y-1'",
+   "evidence": {
+    "latest_period_used": "Y-1",
+    "fields": [
+     "reporting_period",
+     "reporting_year",
+     "system_id"
+    ],
+    "rule": "Target year Y is the calendar year of the monitoring period. Features use only monitoring rows with year less than Y, so the latest feature period is Y-1. Limit-based history is forced missing before 2015 because no limits applied. Population eligibility and the label use year-Y monitoring rows, which define the outcome window; this is retrospective research with unverified event-time availability, not a deployable forecast selection. No current-vintage operational status is used to exclude historical rows. Target years run 2015 through 2024."
+   }
+  },
+  {
+   "check": "units.measured_columns_declare_unit_and_frame",
+   "ok": true,
+   "detail": "4 measured column(s) declare unit and frame",
+   "evidence": {
+    "measurements": [
+     {
+      "column": "cbod_average",
+      "frame": "monitoring report for one averaging period",
+      "unit": "mg/L"
+     },
+     {
+      "column": "cbod_limit",
+      "frame": "monitoring report, applicable limit for the period",
+      "unit": "mg/L"
+     },
+     {
+      "column": "suspended_solids_average",
+      "frame": "monitoring report for one averaging period",
+      "unit": "mg/L"
+     },
+     {
+      "column": "suspended_solids_limit",
+      "frame": "monitoring report, applicable limit for the period",
+      "unit": "mg/L"
+     }
+    ]
+   }
+  },
+  {
+   "check": "units.validation_receipt",
+   "ok": true,
+   "detail": "No external threshold, so no unit-validation receipt is required",
+   "evidence": {}
+  },
+  {
+   "check": "splits.time_column_declared",
+   "ok": true,
+   "detail": "split overlap is checked against 'decision_date'",
+   "evidence": {}
+  },
+  {
+   "check": "splits.machine_readable_windows",
+   "ok": true,
+   "detail": "train/eval/holdout windows are declared with start/end",
+   "evidence": {
+    "split_windows": {
+     "eval": {
+      "end": "2023-03-01T00:00:00.000",
+      "start": "2020-03-01T00:00:00.000"
+     },
+     "holdout": {
+      "end": null,
+      "start": "2023-03-01T00:00:00.000"
+     },
+     "train": {
+      "end": "2020-03-01T00:00:00.000",
+      "start": "2015-03-01T00:00:00.000"
+     }
+    }
+   }
+  },
+  {
+   "check": "splits.files_present",
+   "ok": true,
+   "detail": "all three split files exist",
+   "evidence": {
+    "missing": []
+   }
+  },
+  {
+   "check": "splits.non_empty",
+   "ok": true,
+   "detail": "every split has rows",
+   "evidence": {
+    "train": {
+     "rows": 8244,
+     "positives": 1616,
+     "negatives": 6628,
+     "positive_rate": 0.196021
+    },
+    "eval": {
+     "rows": 5894,
+     "positives": 1365,
+     "negatives": 4529,
+     "positive_rate": 0.231591
+    },
+    "holdout": {
+     "rows": 3988,
+     "positives": 893,
+     "negatives": 3095,
+     "positive_rate": 0.223922
+    }
+   }
+  },
+  {
+   "check": "splits.eval_and_holdout_have_both_classes",
+   "ok": true,
+   "detail": "eval and holdout each contain positives and negatives",
+   "evidence": {
+    "train": {
+     "rows": 8244,
+     "positives": 1616,
+     "negatives": 6628,
+     "positive_rate": 0.196021
+    },
+    "eval": {
+     "rows": 5894,
+     "positives": 1365,
+     "negatives": 4529,
+     "positive_rate": 0.231591
+    },
+    "holdout": {
+     "rows": 3988,
+     "positives": 893,
+     "negatives": 3095,
+     "positive_rate": 0.223922
+    }
+   }
+  },
+  {
+   "check": "splits.positive_events_declared",
+   "ok": true,
+   "detail": "eval and holdout declare positives and distinct events",
+   "evidence": {
+    "declared": {
+     "train": {
+      "positives": 1616,
+      "distinct_events": 713
+     },
+     "eval": {
+      "positives": 1365,
+      "distinct_events": 675
+     },
+     "holdout": {
+      "positives": 893,
+      "distinct_events": 570
+     }
+    }
+   }
+  },
+  {
+   "check": "splits.positive_events_match_rows",
+   "ok": true,
+   "detail": "declared positive counts match the rows",
+   "evidence": {
+    "mismatched": []
+   }
+  },
+  {
+   "check": "splits.event_key_column_declared",
+   "ok": true,
+   "detail": "clustered events are counted by 'system_id' (date part)",
+   "evidence": {}
+  },
+  {
+   "check": "splits.distinct_events_match_rows",
+   "ok": true,
+   "detail": "declared clustered event counts match the rows",
+   "evidence": {
+    "recomputed": {
+     "train": 713,
+     "eval": 675,
+     "holdout": 570
+    },
+    "declared": {
+     "train": {
+      "positives": 1616,
+      "distinct_events": 713
+     },
+     "eval": {
+      "positives": 1365,
+      "distinct_events": 675
+     },
+     "holdout": {
+      "positives": 893,
+      "distinct_events": 570
+     }
+    }
+   }
+  },
+  {
+   "check": "splits.enough_clustered_positives",
+   "ok": true,
+   "detail": "eval and holdout carry enough independent positive events to score",
+   "evidence": {
+    "thin": [],
+    "recomputed_events": {
+     "train": 713,
+     "eval": 675,
+     "holdout": 570
+    },
+    "minimums": {
+     "positives": 30,
+     "distinct_events": 20
+    }
+   }
+  },
+  {
+   "check": "splits.rates_not_uniform",
+   "ok": true,
+   "detail": "positive rates are between 0 and 1",
+   "evidence": {
+    "rates": [
+     0.196021,
+     0.231591,
+     0.223922
+    ]
+   }
+  },
+  {
+   "check": "splits.actual_ranges_computed",
+   "ok": true,
+   "detail": "row timestamps found for every split",
+   "evidence": {
+    "ranges": {
+     "train": {
+      "min": "2015-03-01",
+      "max": "2019-03-01"
+     },
+     "eval": {
+      "min": "2020-03-01",
+      "max": "2022-03-01"
+     },
+     "holdout": {
+      "min": "2023-03-01",
+      "max": "2024-03-01"
+     }
+    }
+   }
+  },
+  {
+   "check": "splits.actual_ranges_disjoint",
+   "ok": true,
+   "detail": "the rows of the three splits occupy disjoint periods",
+   "evidence": {
+    "ranges": {
+     "train": {
+      "min": "2015-03-01",
+      "max": "2019-03-01"
+     },
+     "eval": {
+      "min": "2020-03-01",
+      "max": "2022-03-01"
+     },
+     "holdout": {
+      "min": "2023-03-01",
+      "max": "2024-03-01"
+     }
+    },
+    "overlaps": []
+   }
+  },
+  {
+   "check": "splits.rows_within_declared_windows",
+   "ok": true,
+   "detail": "every row falls inside its split's declared window",
+   "evidence": {
+    "windows": {
+     "eval": {
+      "end": "2023-03-01T00:00:00.000",
+      "start": "2020-03-01T00:00:00.000"
+     },
+     "holdout": {
+      "end": null,
+      "start": "2023-03-01T00:00:00.000"
+     },
+     "train": {
+      "end": "2020-03-01T00:00:00.000",
+      "start": "2015-03-01T00:00:00.000"
+     }
+    },
+    "ranges": {
+     "train": {
+      "min": "2015-03-01",
+      "max": "2019-03-01"
+     },
+     "eval": {
+      "min": "2020-03-01",
+      "max": "2022-03-01"
+     },
+     "holdout": {
+      "min": "2023-03-01",
+      "max": "2024-03-01"
+     }
+    }
+   }
+  },
+  {
+   "check": "splits.no_cross_split_entities",
+   "ok": true,
+   "detail": "no record_id appears in more than one split",
+   "evidence": {
+    "shared_sample": [],
+    "shared_count": 0
+   }
+  },
+  {
+   "check": "splits.duplicate_entities_within_splits",
+   "ok": true,
+   "detail": "0 repeated-identifier rows within splits, at most the declared 0",
+   "evidence": {
+    "duplicate_rows": {},
+    "declared": 0
+   }
+  },
+  {
+   "check": "runner.layout",
+   "ok": true,
+   "detail": "holdout is private and train/eval are public",
+   "evidence": {}
+  },
+  {
+   "check": "runner.meta_json_keys",
+   "ok": true,
+   "detail": "meta.json carries the keys the runner reads",
+   "evidence": {
+    "keys": [
+     "columns",
+     "description",
+     "id_columns",
+     "name",
+     "positive_label",
+     "positive_rate",
+     "rows",
+     "split",
+     "split_description",
+     "target"
+    ]
+   }
+  },
+  {
+   "check": "runner.meta_matches_files",
+   "ok": true,
+   "detail": "meta.json agrees with the split files",
+   "evidence": {
+    "problems": []
+   }
+  },
+  {
+   "check": "runner.meta_counts_match_files",
+   "ok": true,
+   "detail": "meta rows and rates match the files",
+   "evidence": {}
+  },
+  {
+   "check": "runner.id_columns_are_not_features",
+   "ok": true,
+   "detail": "declared identifiers are not also listed as features",
+   "evidence": {}
+  }
+ ],
+ "failed_checks": []
+}

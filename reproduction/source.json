@@ -1,0 +1,192 @@
+{
+  "construction": {
+    "access_recipe": "GET the monitoring CSV and the identification CSV from the data-donnees.az.ec.gc.ca/api/file?path=... endpoints; each returns a 302 to a short-lived signed Azure blob, so use a session that follows redirects and re-request rather than caching the signed URL. Read with pandas using encoding cp1252 or latin-1, since the French header text is not UTF-8. Select columns by position or by exact header string because headers are bilingual. Parse the reporting-period field into year plus period token (values look like 2019-annuel/annual, 2019-Q3, 2025-Q4); annual rows carry month 0. Coerce the literal string Not provided to NaN. Aggregate monitoring to one row per facility-year: label = any(value > limit) over rows with limit > 0; covariates from the year-1 aggregate; join identification on the facility identifier. Optionally left-join acute-lethality failure counts and CSO discharge days on facility and year.",
+    "expected_size": "Observed file sizes: monitoring CSV 24 MiB, identification CSV 2 MiB, acute CSV 2 MiB, CSO volumes CSV 35 MiB. The monitoring file covers 2013-2025 for the roughly 2,300 regulated systems and should be on the order of 10^5 period rows. After aggregation the modelling matrix is estimated at 17,000-19,000 system-year rows for target years 2015-2024, with a positive rate plausibly around one in five (the 2018 report's suspended-solids supplementary table shows 416 of 1,977 systems above the 25 mg/L limit, and the CBOD table shows 279 of 1,977).",
+    "format": "Three comma-separated text files with bilingual slash-joined headers: identification (one row per facility), monitoring (one row per facility-period-month), acute lethality (one row per sample). No archive, no authentication.",
+    "source_examples": "Facility 1506, Gold Bar Wastewater Treatment Plant, period 2015-Q1 month 1: average CBOD 5 mg/L, CBOD limit 25, CBOD compliance -20, suspended solids 12.6, limit 25, compliance -12.4, approval state Approved. Facility 1243, Syncrude Canada Ltd, period 2015-annuel/annual: average CBOD 7.4, limit 25, compliance -17.6. The same facility in 2013-annuel/annual shows CBOD 8.4 with limit 0, confirming limits are absent before 2015. Facility 36816, Town of Hanley Lagoon, 2018-annuel/annual: single-concentration acute lethality result Fail, then Pass in 2019 and Fail again in 2020, showing within-system persistence of toxicity failures."
+  },
+  "dataset_id": "wser-effluent-exceedance",
+  "evidence": [
+    {
+      "claim": "ECCC publishes the WSER identification and monitoring record as open CSV for 2013 to 2025 under the Open Government Licence - Canada.",
+      "quote": "These files contain information about each wastewater system as reported in the Effluent Regulatory Reporting Information System (ERRIS) by the owners/operators of each wastewater system subject to the WSER for the years 2013 to 2025.",
+      "url": "https://open.canada.ca/data/en/dataset/9e11e114-ef0d-4814-8d93-24af23716489"
+    },
+    {
+      "claim": "Exceedance is defined as a positive difference between the reported average and the applicable limit.",
+      "quote": "A positive difference indicates that the wastewater system exceeded the WSER effluent quality standard for that particular averaging period.",
+      "url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-descriptions-EN.txt"
+    },
+    {
+      "claim": "Limits are 25 mg/L for all systems except transitional-authorization holders, which carry facility-specific limits in the same columns.",
+      "quote": "The CBOD and suspended solids limits are 25 mg/L respectively for all wastewater systems except for those systems that received a transitional authorization under the WSER.",
+      "url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-descriptions-EN.txt"
+    },
+    {
+      "claim": "No compliance limits exist for 2013 and 2014, fixing the usable target-year range from 2015.",
+      "quote": "there are no compliance limits for the 2013 and 2014 reporting years",
+      "url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-descriptions-EN.txt"
+    },
+    {
+      "claim": "Monitoring reports are due within 45 days after each averaging period, which supports a 1 March decision instant.",
+      "quote": "must send, within 45 days after the end of the period referred to in subsection (2), to the authorization officer, for each final discharge point, a monitoring report",
+      "url": "https://laws-lois.justice.gc.ca/eng/regulations/SOR-2012-139/section-19.html"
+    },
+    {
+      "claim": "Combined-sewer-overflow reports are due by 15 February, so prior-year CSO volumes are available at the decision instant.",
+      "quote": "send to the authorization officer a combined sewer overflow report in respect of each calendar year by February 15 of the following calendar year",
+      "url": "https://laws-lois.justice.gc.ca/eng/regulations/SOR-2012-139/page-4.html"
+    },
+    {
+      "claim": "The licence grants worldwide royalty-free use including commercial redistribution, conditional on attribution.",
+      "quote": "The Information Provider grants you a worldwide, royalty-free, perpetual, non-exclusive licence to use the Information, including for commercial purposes, subject to the terms below.",
+      "url": "https://open.canada.ca/en/open-government-licence-canada"
+    },
+    {
+      "claim": "Where no specific attribution statement is supplied, the licence prescribes a fallback attribution string, which is what we will use.",
+      "quote": "Contains information licensed under the Open Government Licence \u2013 Canada.",
+      "url": "https://open.canada.ca/en/open-government-licence-canada"
+    },
+    {
+      "claim": "The regulated population is about 2,300 systems, so system-year aggregation yields roughly 19,000 candidate rows across the usable years.",
+      "quote": "By the end of 2018, 2,316 wastewater systems out of an estimated 2,407 submitted an identification report under the WSER.",
+      "url": "https://www.canada.ca/en/environment-climate-change/services/wastewater/publications/wastewater-data-reports/wastewater-system-effluent-regulations-annual-report.html"
+    },
+    {
+      "claim": "Acute lethality testing covers a smaller subset, which is why it is an optional secondary covariate rather than the label.",
+      "quote": "A total of 368 systems tested for acute lethality and 88% of these systems reported no failures.",
+      "url": "https://www.canada.ca/en/environment-climate-change/services/wastewater/publications/wastewater-data-reports/wastewater-system-effluent-regulations-annual-report.html"
+    }
+  ],
+  "limitations": [
+    "Identification-report attributes (treatment types, chlorine use, hydraulic retention time, receiving-water description, coordinates) are published as a single current-vintage snapshot with no year stamp, so they can reflect upgrades that happened after the decision instant. They are used as quasi-static covariates and the build should also report a version that drops them entirely.",
+    "The label is an any-period-above-limit indicator, not ECCC's official 75-percent-of-the-time compliance determination, so it deliberately marks more system-years as positive than the regulator would.",
+    "Sampling exposure is unequal: a monthly-reporting plant has twelve chances to exceed, an annual-reporting lagoon has one. Reporting frequency and period counts are supplied as features, but the exposure effect is not removed from the label.",
+    "Repeated systems across years induce serial correlation. Chronological splits prevent future-to-past leakage but not dependence, so a one-row-per-system variant is a necessary sensitivity check.",
+    "Coverage is partial: Nunavut, the Northwest Territories, and areas north of the 54th parallel in Quebec and Newfoundland and Labrador are outside the regulations; Yukon and Quebec municipal systems arrive under equivalency agreements with missing acute-lethality and CSO fields and possibly different limit conventions.",
+    "Reporting completeness is imperfect; the 2018 report notes 26% of systems missed one or more required monitoring reports, so a missing exceedance can mean non-reporting rather than good performance. Eligibility requires at least one filed report.",
+    "Data-entry anomalies exist in the source, including at least one 2025 row where the compliance column contradicts average minus limit, which is why the label is computed from the average and limit columns directly.",
+    "Target year 2025 is excluded because its reports are still maturing in the 2026 vintage; results should not be extended to 2025 without re-checking completeness.",
+    "The Open Government Licence - Canada excludes personal information and third-party rights and is governed by Ontario and Canadian law. Facility-level coordinates and postal codes are present in the identification file and should be dropped from released features. Our CC0 dedication covers only our own labels, splits and code, and never the upstream data."
+  ],
+  "reason": "Environment and Climate Change Canada publishes the full WSER reporting record as three plain CSVs (identification, monitoring, acute lethality) at stable API URLs, with a bilingual data dictionary and a separate prose description that defines exactly how exceedance is computed (reported average minus the system-specific limit). Limits are facility-specific only for the 65 transitional-authorization systems and are carried in the file, so the label needs no external join and no limit lookup. Coverage is ~2,300 systems per year from 2015 onward (no limits existed for 2013-2014), giving roughly 19,000 system-year observations spread over ten target years, enough for fixed chronological train/eval/holdout splits. Reporting deadlines are statutory (45 days after each averaging period; CSO reports by 15 February), which fixes a clean 1 March decision instant at which all prior-year effluent results are on file. Reuse is granted by the Open Government Licence - Canada (worldwide, royalty-free, commercial use permitted) with a specified attribution statement, so no public-domain theory is needed and no publisher permission is implied beyond the licence.",
+  "source": {
+    "attribution": "Contains information licensed under the Open Government Licence \u2013 Canada.",
+    "citation": "",
+    "documentation_url": "https://data-donnees.ec.gc.ca/data/substances/planinfrastruture/wastewater-systems-effluent-regulations-reported-data/",
+    "license": "Open Government Licence - Canada (version 2.0)",
+    "publisher": "Environment and Climate Change Canada (ECCC)",
+    "redistribution": true,
+    "terms_excerpt": "The Information Provider grants you a worldwide, royalty-free, perpetual, non-exclusive licence to use the Information, including for commercial purposes, subject to the terms below.",
+    "terms_url": "https://open.canada.ca/en/open-government-licence-canada",
+    "urls": [
+      "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-surveillance-monitoring.csv",
+      "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-identification.csv"
+    ]
+  },
+  "task": {
+    "decision_user": "ECCC regional compliance and enforcement staff who allocate inspection and follow-up effort across roughly 2,300 regulated systems, and municipal utility managers who sequence capital upgrades and operational fixes for the coming year.",
+    "features": [
+      {
+        "availability": "Y-1 rows with a positive limit and a reported average, restricted to 2015 and later; missing when no evaluable prior-year limit row",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-descriptions-EN.txt",
+        "meaning": "1 if any Y-1 monitoring row with a positive applicable limit and a reported average has average strictly above limit; 0 if Y-1 has an evaluable positive-limit row and none exceed; missing if Y-1 has no evaluable positive-limit row. Limit-based history is restricted to 2015 and later, so 2015 targets are missing even if stray pre-2015 rows carry positive limits.",
+        "name": "prior_year_exceedance"
+      },
+      {
+        "availability": "Y-1 evaluable rows, restricted to 2015 and later; missing when no evaluable prior-year limit row",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-descriptions-EN.txt",
+        "meaning": "Maximum over Y-1 CBOD and suspended-solids evaluable rows of average minus limit, floored at 0; missing when no evaluable Y-1 limit row. Limit-based history is restricted to 2015 and later.",
+        "name": "prior_year_worst_margin"
+      },
+      {
+        "availability": "All years before Y with evaluable limit rows, restricted to 2015 and later; missing when no prior evaluable year",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-surveillance-monitoring.csv",
+        "meaning": "1 if any year before Y has an evaluable exceedance; 0 if at least one prior evaluable year and none; missing if no prior evaluable year. Limit-based history is restricted to 2015 and later.",
+        "name": "ever_exceeded_before"
+      },
+      {
+        "availability": "All years before Y with at least one monitoring row",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-surveillance-monitoring.csv",
+        "meaning": "Count of distinct calendar years before Y with at least one monitoring row.",
+        "name": "history_years_reported"
+      },
+      {
+        "availability": "Y-1 monitoring records; zero when no Y-1 record",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-descriptions-EN.txt",
+        "meaning": "Count of distinct year-period-month monitoring records in Y-1, a measure of sampling exposure; 0 if no Y-1 monitoring row.",
+        "name": "periods_reported_prior_year"
+      },
+      {
+        "availability": "Latest Y-1 monitoring row; inferred from period tokens when blank",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-descriptions-EN.txt",
+        "meaning": "Canonical annual, quarterly or monthly reporting frequency from the latest Y-1 monitoring row; inferred from period tokens if the field is blank.",
+        "name": "reporting_frequency"
+      },
+      {
+        "availability": "Latest Y-1 monitoring row",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-surveillance-monitoring.csv",
+        "meaning": "Intermittent or continuous wastewater system type from the latest Y-1 monitoring row.",
+        "name": "system_type"
+      },
+      {
+        "availability": "Y-1 monitoring rows; missing when no Y-1 volume",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-surveillance-monitoring.csv",
+        "meaning": "Mean reported average daily effluent volume in Y-1, in cubic metres per day; missing if no Y-1 value.",
+        "name": "avg_daily_effluent_volume_m3"
+      },
+      {
+        "availability": "Latest Y-1 monitoring row",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-surveillance-monitoring.csv",
+        "meaning": "Owner type and operator type from the latest Y-1 row, joined by a separator; missing if neither is reported.",
+        "name": "owner_type_operator_type"
+      },
+      {
+        "availability": "Latest Y-1 monitoring row, fallback to identification snapshot",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-surveillance-monitoring.csv",
+        "meaning": "Province from the latest Y-1 monitoring row, falling back to the identification snapshot.",
+        "name": "province"
+      },
+      {
+        "availability": "Current-vintage identification snapshot with no reporting-year stamp; treated as quasi-static",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-identification.csv",
+        "meaning": "Mechanical or activated-sludge class, lagoon class, no treatment, or other, parsed from the identification treatment-type list.",
+        "name": "treatment_family"
+      },
+      {
+        "availability": "Current-vintage identification snapshot; not year-versioned",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-identification.csv",
+        "meaning": "1 if reported hydraulic retention time is five days or more, else 0; missing if not reported.",
+        "name": "hydraulic_retention_ge_5_days"
+      },
+      {
+        "availability": "Current-vintage identification snapshot; not year-versioned",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-identification.csv",
+        "meaning": "1 if chlorine or a chlorine compound is reported in use, else 0; missing if not reported.",
+        "name": "chlorine_use"
+      },
+      {
+        "availability": "Current-vintage identification snapshot; not year-versioned; parsed from the water-frequented-by-fish description or name, not the generic discharge-place description",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-identification.csv",
+        "meaning": "Reported description or name of the water frequented by fish at the discharge point, such as a watercourse, lake or fish spawning area, taken from the water-frequented-by-fish identification column; not the generic discharge-place description.",
+        "name": "receiving_water_type"
+      },
+      {
+        "availability": "Acute-lethality CSV rows for Y-1; missing when no acute test row exists",
+        "evidence_url": "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fsubstances%2Fplaninfrastruture%2Fwastewater-systems-effluent-regulations-reported-data%2FResaeu-Wser-aigue-acute.csv",
+        "meaning": "Count of failed rainbow-trout acute lethality tests in Y-1; missing when no acute test row exists, which is expected for systems below the testing threshold.",
+        "name": "prior_year_acute_lethality_failures"
+      }
+    ],
+    "outcome_horizon": "The full calendar year Y (1 January to 31 December), observable from reports due by 14 February of Y+1.",
+    "population": "Wastewater systems filing at least one monitoring report in target year Y in which a CBOD or suspended-solids limit greater than 0 is recorded, with at least one prior year of monitoring history. The system-year must also have at least one such positive-limit row with a reported average; system-years with a positive limit but a missing average and no observed exceedance are excluded rather than labeled 0. No current-vintage operational-status snapshot is used to exclude historical system-years because the identification status field has no reporting-year stamp and is not year-versioned. Because no limits existed before 1 January 2015, target years run 2015 to 2024. Systems outside the regulations (Nunavut, Northwest Territories, north of the 54th parallel in Quebec and Newfoundland and Labrador) never appear. Quebec municipal systems appear under the equivalency agreement with provincial limit conventions carried in the limit columns. Eligibility and labels use year-Y reports, so this is a retrospective research cohort, not a deployable 1 March forecast roster.",
+    "prediction_time": "1 March of target year Y. Every monitoring report for a completed averaging period is due within 45 days of the period end (annual and Q4 reports therefore due by 14 February), and combined-sewer-overflow reports are due by 15 February, so all year Y-1 effluent results and CSO volumes are on file at the statutory deadline. The timing metadata treats the 45-day statutory lag as a publication proxy; actual publication dates of the downloaded current-vintage CSV are not verified. Identification-report attributes are treated as a current-vintage snapshot.",
+    "question": "At the start of a compliance year, will a federally regulated Canadian wastewater system report at least one effluent monitoring period whose average CBOD or suspended-solids concentration exceeds the limit that applies to it?",
+    "simple_references": "Persistence (predict Y from the Y-1 exceedance flag), majority class (no exceedance, roughly four in five system-years), a province-by-treatment-family base rate, and an ever-exceeded-before indicator. These establish how much of the signal is habit versus structure.",
+    "split_policy": "Fixed chronological boundaries by target year: train 2015-2019, eval 2020-2022, holdout 2023-2024. No embargo year is needed because each label window is a single non-overlapping calendar year and every feature is dated on or before 31 December Y-1, so no row can see a later row's outcome. Target year 2025 is excluded because its reports are still maturing in the current data vintage. Reporting-completeness strata and province are kept balanced across the three periods by construction of the year windows, not by resampling.",
+    "target": "For system i and target calendar year Y, label = 1 if any monitoring row for year Y with a reported CBOD limit greater than 0 has average CBOD strictly greater than that limit, or any row with a reported suspended-solids limit greater than 0 has average suspended solids strictly greater than that limit; otherwise 0. Computed from the reported average and the reported limit, not from the pre-computed compliance column. Rows for 2013 and 2014 are excluded because no limits applied.",
+    "usefulness": "Exceedance cannot be read off any field at the decision instant: it must be forecast from plant design class, retention time, disinfection practice, scale, sampling regime, jurisdiction and multi-year margin history. A regulator with about 2,300 systems and limited inspectors cannot inspect everything; knowing which compliant-looking systems are about to tip over, and which chronic lagoon systems are structurally stuck, changes where follow-up and upgrade money go. Persistence alone under-performs because first-time exceedances and post-upgrade recoveries are exactly the cases that matter operationally, and because transitional-authorization systems are judged against their own relaxed limit rather than 25 mg/L."
+  },
+  "title": "Will a Canadian wastewater system exceed its federal effluent quality limit next year? Forward exceedance prediction from WSER identification and monitoring reports",
+  "verdict": "ready"
+}

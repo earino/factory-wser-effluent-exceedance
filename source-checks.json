@@ -1,0 +1,161 @@
+{
+  "checks": [
+    {
+      "check": "monitoring CSV parsed",
+      "observed": "72392 rows and 31 columns",
+      "expected": "nonempty monitoring CSV with source headers",
+      "passed": true
+    },
+    {
+      "check": "identification CSV parsed",
+      "observed": "2538 unique systems and 44 columns",
+      "expected": "nonempty identification CSV with one row per system",
+      "passed": true
+    },
+    {
+      "check": "acute lethality CSV parsed",
+      "observed": "15106 rows and 15 columns",
+      "expected": "nonempty acute lethality CSV with source headers",
+      "passed": true
+    },
+    {
+      "check": "required monitoring fields resolved",
+      "observed": "resolved: system identifier [Identification de l'installation/ Facility Identification]; reporting period or reporting year [P\u00e9riode de d\u00e9claration/ Reporting Period]; CBOD average [DBOC moyenne (mg/L) pendant la p\u00e9riode de calcul de la moyenne/ Average CBOD (mg/L) for averaging period]; CBOD limit [Limite de DBOC/ CBOD Limit]; suspended solids average [Moyenne des mati\u00e8res en suspension (mg/L) pour la p\u00e9riode de calcul de la moyenne/ Average suspended solids (mg/L) for averaging period]; suspended solids limit [Limite des mati\u00e8res en suspension/ Suspended Solids Limit]; system type [Type du syst\u00e8me (Anglais) / System Type (English)]; reporting frequency [Fr\u00e9quence de reportage (Anglais)/ Reporting Frequency (English) ]; average daily volume [Volume journalier moyen de l'effluent (m3)/ Average Daily Effluent Volume (m3)]; owner type [Type de propri\u00e9taire (Anglais)/ Owner Type (English)]; operator type [Type d'exploitant (Anglais)/ Operator Type (English)]; province [Province (Anglais) / Province (English)] | unresolved: none | observed headers: Identification de l'installation/ Facility Identification; P\u00e9riode de d\u00e9claration/ Reporting Period; Nom du propri\u00e9taire/ Owner Name; Nom du syst\u00e8me/ System Name; Ville / City; Province (Anglais) / Province (English); Province (Fran\u00e7ais) / Province (French); Type de propri\u00e9taire (Anglais)/ Owner Type (English); Type de propri\u00e9taire (Fran\u00e7ais)/ Owner Type (French); Type d'exploitant (Anglais)/ Operator Type (English); Type d'exploitant  (Fran\u00e7ais)/ Operator Type (French); Type du syst\u00e8me (Anglais) / System Type (English); Type du syst\u00e8me (Fran\u00e7ais) / System Type (French); Fr\u00e9quence de reportage (Anglais)/ Reporting Frequency (English) ; Fr\u00e9quence de reportage (Fran\u00e7ais)/ Reporting Frequency (French); P\u00e9riodes decalcul (Anglais)/ Averaging Period (English); P\u00e9riodes de calcul (Fran\u00e7ais)/ Averaging Period (French); Mois/ Month; Volume journalier moyen de l'effluent (m3)/ Average Daily Effluent Volume (m3); Volume total de l\u2019effluent rejet\u00e9 en m\u00e8tre cube (m3) pour la p\u00e9riode de calcul de la moyenne/ Total volume of effluent deposited in cubic metres (m3) for averaging period ; Nombre total de jours o\u00f9 l\u2019effluent a \u00e9t\u00e9 rejet\u00e9 durant la p\u00e9riode de calcul de la moyenne/ Total number of days effluent was deposited for averaging period; DBOC moyenne (mg/L) pendant la p\u00e9riode de calcul de la moyenne/ Average CBOD (mg/L) for averaging period; Limite de DBOC/ CBOD Limit; Conformit\u00e9 de la DBOC/ CBOD Compliance; Moyenne des mati\u00e8res en suspension (mg/L) pour la p\u00e9riode de calcul de la moyenne/ Average suspended solids (mg/L) for averaging period; Limite des mati\u00e8res en suspension/ Suspended Solids Limit; Conformit\u00e9 des mati\u00e8res en suspension/ Suspended Solids Compliance; Autorisations transitoires (Anglais)/ Transitional Authorization (English); Autorisations transitoires (Fran\u00e7ais)/ Transitional Authorization (French); \u00c9tat d\u2019approbation (Anglais)/ Approval State (English); \u00c9tat d\u2019approbation (Fran\u00e7ais)/ Approval State (French)",
+      "expected": "system identifier, at least one of reporting period or reporting year, CBOD average, CBOD limit, suspended solids average, suspended solids limit, system type, reporting frequency, average daily volume, owner type, operator type, province",
+      "passed": true
+    },
+    {
+      "check": "required identification fields resolved",
+      "observed": "selected headers: Identification de l'installation/ Facility Identification; Le temps de r\u00e9tention hydraulique est-il de 5 jours ou plus? (Anglais)/ Is the hydraulic retention time 5 days or more? (English); Indicateur - Utilisation de chlore (Anglais)/ Chlorine Use Indicator (English); Description des eaux fr\u00e9quent\u00e9es par les poisons (Anglais) / Description of water frequented by fish (English)",
+      "expected": "identification system identifier, hydraulic retention answer, chlorine use indicator and water-frequented-by-fish description all resolved",
+      "passed": true
+    },
+    {
+      "check": "identification system key is one row per facility",
+      "observed": "0 duplicate facility identifiers before deduplication; 2538 facilities retained",
+      "expected": "identification file is a one-row-per-facility snapshot and deduplication leaves a unique key",
+      "passed": true
+    },
+    {
+      "check": "hydraulic retention field carries answered values",
+      "observed": "answer-like distinct values: no; yes; mapped facilities 2175 of 2538",
+      "expected": "the identification column answers whether the hydraulic retention time is five days or more, so yes and no answers map to one and zero instead of being parsed as a numeric day count",
+      "passed": true
+    },
+    {
+      "check": "receiving-water type uses water-frequented-by-fish field",
+      "observed": "selected header: Description des eaux fr\u00e9quent\u00e9es par les poisons (Anglais) / Description of water frequented by fish (English); nonmissing receiving-water values: 1715",
+      "expected": "selected header identifies the water frequented by fish, not the generic discharge place description, and at least one identification row carries a nonmissing value",
+      "passed": true
+    },
+    {
+      "check": "identification join coverage",
+      "observed": "0.9991 fraction of eligible system-years matched identification",
+      "expected": "at least 0.5 of eligible system-years match the identification snapshot",
+      "passed": true
+    },
+    {
+      "check": "operational status is year-aligned or not used for exclusion",
+      "observed": "year-aligned status field present False; target rows with known current-vintage status 57107; target rows with current-vintage non-operational status 1032; historical target rows excluded by current status 0",
+      "expected": "a status used to exclude target years must carry a reporting-year stamp; without one, retain all filing systems and expose status only as a diagnostic limitation",
+      "passed": true
+    },
+    {
+      "check": "target year range",
+      "observed": "minimum target year 2015; maximum target year 2024",
+      "expected": "target years only 2015 through 2024",
+      "passed": true
+    },
+    {
+      "check": "target population nonempty with positive limits",
+      "observed": "18846 eligible system-years; 18846 with a positive limit",
+      "expected": "nonempty population with at least one positive-limit row",
+      "passed": true
+    },
+    {
+      "check": "label is binary",
+      "observed": "0; 1",
+      "expected": "only 0 and 1",
+      "passed": true
+    },
+    {
+      "check": "unknown outcomes excluded from negative labels",
+      "observed": "0 label-zero system-years still have an unresolved positive-limit average",
+      "expected": "zero; unresolved system-years are excluded rather than labeled 0",
+      "passed": true
+    },
+    {
+      "check": "label follows strict average-minus-limit recomputation",
+      "observed": "0 mismatches between stored label and strict recomputation",
+      "expected": "zero; label is 1 only when a reported average is strictly greater than its positive limit",
+      "passed": true
+    },
+    {
+      "check": "features use only prior target years",
+      "observed": "0 cases where a feature source year was not earlier than target year",
+      "expected": "zero; historical features use rows with year less than target year",
+      "passed": true
+    },
+    {
+      "check": "reporting frequency recovered for prior-year aggregates",
+      "observed": "prior-year aggregates inspected 17723; frequency taken from the reported field 14043; frequency recovered from prior-year period tokens 3680",
+      "expected": "reporting frequency comes from the latest prior-year monitoring row when reported and is inferred from prior-year period tokens when that field is blank, so the prior-year aggregate never needs period-token columns that only exist on unaggregated rows",
+      "passed": true
+    },
+    {
+      "check": "split row counts",
+      "observed": "train 8244; eval 5894; holdout 3988",
+      "expected": "all three chronological splits are nonempty",
+      "passed": true
+    },
+    {
+      "check": "stable record IDs are unique",
+      "observed": "0 duplicate record IDs",
+      "expected": "zero duplicate record IDs",
+      "passed": true
+    },
+    {
+      "check": "output columns exactly declared",
+      "observed": "record_id; decision_date; target_year; system_id; prior_year_exceedance; prior_year_worst_margin; ever_exceeded_before; history_years_reported; periods_reported_prior_year; reporting_frequency; system_type; avg_daily_effluent_volume_m3; owner_type_operator_type; province; treatment_family; hydraulic_retention_ge_5_days; chlorine_use; receiving_water_type; prior_year_acute_lethality_failures; next_year_exceedance",
+      "expected": "record_id; decision_date; target_year; system_id; prior_year_exceedance; prior_year_worst_margin; ever_exceeded_before; history_years_reported; periods_reported_prior_year; reporting_frequency; system_type; avg_daily_effluent_volume_m3; owner_type_operator_type; province; treatment_family; hydraulic_retention_ge_5_days; chlorine_use; receiving_water_type; prior_year_acute_lethality_failures; next_year_exceedance",
+      "passed": true
+    },
+    {
+      "check": "declared feature coverage",
+      "observed": "prior_year_exceedance: 16250; prior_year_worst_margin: 16250; ever_exceeded_before: 16576; history_years_reported: 18126; periods_reported_prior_year: 18126; reporting_frequency: 17723; system_type: 14042; avg_daily_effluent_volume_m3: 17044; owner_type_operator_type: 17030; province: 18126; treatment_family: 18109; hydraulic_retention_ge_5_days: 16560; chlorine_use: 16562; receiving_water_type: 12906; prior_year_acute_lethality_failures: 3853",
+      "expected": "every declared feature has at least one nonmissing constructed value",
+      "passed": true
+    },
+    {
+      "check": "concentration measurement unit and frame",
+      "observed": "minimum 0.0; maximum 1562.92; negative count 0",
+      "expected": "nonnegative concentrations in mg/L per the WSER description",
+      "passed": true,
+      "kind": "unit"
+    },
+    {
+      "check": "default and facility-specific limit semantics",
+      "observed": "120752 positive limit rows equal 25 mg/L; 125758 positive limit rows total",
+      "expected": "the 25 mg/L default appears together with facility-specific transitional limits in the same columns",
+      "passed": true
+    },
+    {
+      "check": "pre-2015 source limit rows recorded; target labels begin 2015",
+      "observed": "8 source rows before 2015 carry a positive limit; systems 1; years 2013; 2014; minimum shipped target year 2015",
+      "expected": "stray pre-2015 positive-limit rows are counted as evidence only; target labels begin at 2015; pre-2015 rows may still supply history counts but not limit-based features",
+      "passed": true
+    },
+    {
+      "check": "identification joined as one snapshot row per facility",
+      "observed": "reporting-year header present False; unique facility identifiers after deduplication 2538 of 2538 retained rows; current status excluded from historical row filtering",
+      "expected": "identification attributes are joined once per facility on the stable system identifier; with no reporting-year stamp those attributes stay current-vintage assumptions and current status is not used for historical exclusion",
+      "passed": true
+    },
+    {
+      "check": "pre-2015 limit rows do not contribute to limit-based history",
+      "observed": "2015 target rows 1475; nonmissing prior_year_exceedance 0; nonmissing prior_year_worst_margin 0; nonmissing ever_exceeded_before 0",
+      "expected": "zero; no limits applied before 2015, so limit-based historical features are missing for 2015 targets even when stray pre-2015 positive-limit rows exist",
+      "passed": true
+    }
+  ]
+}
